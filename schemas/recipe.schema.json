@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/InferMatrixLab/recipe/blob/main/schemas/recipe.schema.json",
+  "title": "InferMatrixLab deployment recipe v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "kind",
+    "model",
+    "engine",
+    "runtime",
+    "hardware",
+    "environment",
+    "commands",
+    "deployment",
+    "acceptance",
+    "maintainers",
+    "updated_at",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "$ref": "#/$defs/slug" },
+    "title": { "$ref": "#/$defs/text" },
+    "kind": { "enum": ["standalone_engine", "upstream_recipe"] },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "provider", "task"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[^/\\s]+/[^/\\s]+$" },
+        "provider": { "$ref": "#/$defs/text" },
+        "task": { "type": "string", "pattern": "^[a-z][a-z0-9_]+$" }
+      }
+    },
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "repository", "ref"],
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "name": { "$ref": "#/$defs/text" },
+        "repository": { "$ref": "#/$defs/repository" },
+        "ref": { "$ref": "#/$defs/text" }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["backend", "precision"],
+      "properties": {
+        "backend": { "$ref": "#/$defs/slug" },
+        "precision": { "$ref": "#/$defs/text" }
+      }
+    },
+    "hardware": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["vendor", "model", "device_count"],
+      "properties": {
+        "vendor": { "$ref": "#/$defs/text" },
+        "model": { "$ref": "#/$defs/text" },
+        "device_count": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["os", "requirements"],
+      "properties": {
+        "os": { "$ref": "#/$defs/text" },
+        "requirements": { "$ref": "#/$defs/textList" }
+      }
+    },
+    "commands": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["install", "serve", "request", "benchmark"],
+      "properties": {
+        "install": { "$ref": "#/$defs/command" },
+        "serve": { "$ref": "#/$defs/command" },
+        "request": { "$ref": "#/$defs/command" },
+        "benchmark": { "$ref": "#/$defs/command" }
+      }
+    },
+    "deployment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "last_verified_at", "evidence_url"],
+      "properties": {
+        "status": { "enum": ["validated", "unverified", "unsupported"] },
+        "last_verified_at": { "type": ["string", "null"], "format": "date" },
+        "evidence_url": { "$ref": "#/$defs/nullableUrl" }
+      }
+    },
+    "acceptance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verdict", "issue_url", "evidence_url"],
+      "properties": {
+        "verdict": { "enum": ["PASS", "FAIL", "INCONCLUSIVE"] },
+        "issue_url": { "$ref": "#/$defs/nullableUrl" },
+        "evidence_url": { "$ref": "#/$defs/nullableUrl" }
+      }
+    },
+    "maintainers": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "maxLength": 39,
+        "pattern": "^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+      }
+    },
+    "updated_at": { "type": "string", "format": "date" },
+    "limitations": { "$ref": "#/$defs/textList" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "deployment": { "properties": { "status": { "const": "validated" } } }
+        }
+      },
+      "then": {
+        "properties": {
+          "deployment": {
+            "properties": {
+              "last_verified_at": { "type": "string" },
+              "evidence_url": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "deployment": {
+            "properties": { "status": { "const": "unsupported" } }
+          }
+        }
+      },
+      "then": { "properties": { "limitations": { "minItems": 1 } } },
+      "else": {
+        "properties": {
+          "commands": {
+            "properties": {
+              "install": { "type": "string" },
+              "serve": { "type": "string" },
+              "request": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "acceptance": { "properties": { "verdict": { "const": "PASS" } } }
+        }
+      },
+      "then": {
+        "properties": {
+          "acceptance": {
+            "properties": {
+              "issue_url": { "type": "string" },
+              "evidence_url": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "text": { "type": "string", "minLength": 1, "pattern": "\\S" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "repository": {
+      "type": "string",
+      "pattern": "^https://github\\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    },
+    "textList": { "type": "array", "items": { "$ref": "#/$defs/text" } },
+    "command": { "anyOf": [{ "$ref": "#/$defs/text" }, { "type": "null" }] },
+    "nullableUrl": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "pattern": "^https://[^\\s/?#@:]+(?::[0-9]{1,5})?(?:[/?#][^\\s]*)?$"
+    }
+  }
+}

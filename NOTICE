@@ -1,0 +1,22 @@
+InferMatrixLab Recipes — original catalog and website implementation.
+Copyright (c) 2026 InferMatrixLab. Code licensed under the repository MIT LICENSE.
+
+Design and information-architecture reference:
+https://recipes.vllm.ai/
+https://github.com/vllm-project/recipes (Apache-2.0)
+The reference was read for its browse/model/recipe organization and build-time
+content approach. No upstream source files, command synthesizer or visual assets
+were copied into this implementation. No Apache code is relicensed as MIT.
+
+Organization logo: public/assets/infermatrix-logo.png, unchanged supplied
+InferMatrix wordmark, sourced from InferMatrixLab/infermatrix.github.io,
+assets/infermatrix-logo.png at b3903bdaffd4e9550263bf42791995b83f514480.
+The source repository's ATTRIBUTION.md calls this supplied organization artwork;
+no additional artwork/trademark license grant is asserted. Repository MIT terms
+do not relicense the brand asset. Preserve its intact light background and source.
+
+IBM Plex Sans and IBM Plex Mono are bundled through @fontsource packages under
+SIL Open Font License 1.1; copyright and full terms are in licenses/.
+All engine implementations, dependencies, models and imported recipe text retain
+their respective source licenses and authorship. See each source repository,
+the inventory, and original evidence. Catalog collection does not change ownership.

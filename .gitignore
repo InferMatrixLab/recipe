@@ -1,0 +1,8 @@
+node_modules/
+.next/
+out/
+generated/
+sources.lock.json.*.tmp
+.env*
+!.env.example
+*.log

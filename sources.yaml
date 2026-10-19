@@ -1,0 +1,27 @@
+schema_version: 1
+sources:
+  - id: qwen3-tts-engine
+    repository: https://github.com/InferMatrixLab/qwen3-tts-engine
+    ref: main
+    paths:
+      - recipes/qwen3-tts-ascend-910b1.yaml
+  - id: drama-3-single-b300-engine
+    repository: https://github.com/InferMatrixLab/drama-3-single-b300-engine
+    ref: codex-drama3-b300
+    paths:
+      - recipes/drama3-b300-fp8.yaml
+  - id: vllm-omni-mlx
+    repository: https://github.com/InferMatrixLab/vllm-omni-mlx
+    ref: main
+    paths:
+      - recipes/qwen3-tts-mlx-m4-4bit.yaml
+  - id: vllm-rlt
+    repository: https://github.com/InferMatrixLab/vllm-rlt
+    ref: main
+    paths:
+      - recipes/ouro-1-4b-rlt-h20-3e-bf16.yaml
+  - id: system1-omni
+    repository: https://github.com/InferMatrixLab/system1-omni
+    ref: main
+    paths:
+      - recipes/lfm2-5-350m-system1-l40s-fp16.yaml

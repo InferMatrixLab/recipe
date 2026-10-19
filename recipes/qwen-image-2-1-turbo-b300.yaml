@@ -1,0 +1,105 @@
+# Historical upstream reference, collected without a fresh hardware run.
+# Commands and environment: https://github.com/vllm-project/vllm-omni/pull/8739#issuecomment-6119754582
+# Separate pinned result scope: https://github.com/vllm-project/vllm-omni/pull/8739#issuecomment-6119846759
+schema_version: 1
+id: qwen-image-2-1-turbo-b300
+title: Qwen-Image 2.1 Turbo / vLLM-Omni / 4 x B300
+kind: upstream_recipe
+model:
+  id: Qwen/Qwen-Image-2.1-Turbo
+  provider: Qwen
+  task: text_to_image
+engine:
+  id: vllm-omni
+  name: vLLM-Omni
+  repository: https://github.com/vllm-project/vllm-omni
+  ref: d57480f5054e6c377a04225840b24e6355244dd9
+runtime:
+  backend: cuda
+  precision: bf16
+hardware:
+  vendor: NVIDIA
+  model: B300 SXM6 AC
+  device_count: 4
+environment:
+  os: Linux (prepared inference environment; distribution/version not recorded in the source report)
+  requirements:
+    - Four idle NVIDIA B300 SXM6 AC GPUs with the reported NV18 interconnect and NUMA 0 placement; expose devices 0,1,2,3.
+    - Supply PREPARED_ENV as the absolute path to an existing inference environment containing Python 3.12.3, PyTorch 2.13.0+cu130, vLLM 0.31.0, Triton 3.7.1, diffusers 0.40.0 and transformers 5.14.1.
+    - The prepared environment also requires kernels 0.16.1, flash-attn-4 4.0.0b18 and NCCL 2.29.7; the reported NVIDIA driver was 610.43.02.
+    - Explicit symmetric-memory exchange requires a supported CUDA compiler/toolkit and the NCCL wheel headers/library layout; the source report does not provide a complete prepared-environment build lock.
+    - Supply MODEL_SNAPSHOT as an absolute, already downloaded Qwen/Qwen-Image-2.1-Turbo snapshot path ending in d65dbc9a7e8f6b5479e33dee6030eaab2a906509; respect the checkpoint's separate Qwen Research License.
+    - Supply E2E_CACHE as an absolute writable prepared-cache directory. Git, Bash, realpath and curl must be available. Export setup variables to the server terminal.
+commands:
+  install: |
+    # Source setup in an existing prepared runtime; this does not create that runtime.
+    set -euo pipefail
+    : "${PREPARED_ENV:?Set PREPARED_ENV to the absolute prepared inference environment}"
+    : "${MODEL_SNAPSHOT:?Set MODEL_SNAPSHOT to the pinned local model snapshot}"
+    : "${E2E_CACHE:?Set E2E_CACHE to the absolute prepared cache directory}"
+    test -x "$PREPARED_ENV/bin/vllm"
+    test -d "$MODEL_SNAPSHOT"
+    case "$MODEL_SNAPSHOT" in
+      */d65dbc9a7e8f6b5479e33dee6030eaab2a906509) ;;
+      *) printf '%s\n' 'MODEL_SNAPSHOT must identify the pinned model revision' >&2; exit 1 ;;
+    esac
+    git clone https://github.com/vllm-project/vllm-omni.git qwen21-b300-upstream
+    cd qwen21-b300-upstream
+    git fetch https://github.com/david6666666/vllm-omni.git d57480f5054e6c377a04225840b24e6355244dd9
+    git checkout --detach d57480f5054e6c377a04225840b24e6355244dd9
+    export PR_REPO="$(pwd)"
+    export PATH="$PREPARED_ENV/bin:$PATH"
+    export CUDA_VISIBLE_DEVICES=0,1,2,3
+    export OMP_NUM_THREADS=4
+    export PYTHONDONTWRITEBYTECODE=1
+    export HF_HUB_OFFLINE=1
+    export HF_HOME="$E2E_CACHE/huggingface"
+    export HF_MODULES_CACHE="$E2E_CACHE/huggingface/modules"
+    export TORCH_EXTENSIONS_DIR="$E2E_CACHE/torch-extensions"
+    export TRITON_CACHE_DIR="$E2E_CACHE/triton"
+    export VLLM_CACHE_ROOT="$E2E_CACHE/vllm"
+    export CUDA_CACHE_PATH="$E2E_CACHE/cuda"
+    export TORCHINDUCTOR_CACHE_DIR="$E2E_CACHE/inductor"
+  serve: |
+    # Run in the terminal retaining the setup exports; the PR checkout includes the patch.
+    set -euo pipefail
+    cd "$PR_REPO"
+    PYTHONPATH="$PR_REPO" "$PREPARED_ENV/bin/vllm" serve "$MODEL_SNAPSHOT" \
+      --served-model-name Qwen/Qwen-Image-2.1-Turbo \
+      --omni --enforce-eager --dtype bfloat16 \
+      --num-gpus 4 --tensor-parallel-size 1 --usp 4 --ring 1 \
+      --cfg-parallel-size 1 --vae-patch-parallel-size 1 \
+      --max-num-seqs 1 --diffusion-attention-backend FLASH_ATTN \
+      --host 127.0.0.1 --port 8098 --stage-init-timeout 1200 \
+      --ulysses-a2a-permute
+  request: |
+    # Run in a second terminal after the server reports ready.
+    set -euo pipefail
+    curl --fail --silent --show-error http://127.0.0.1:8098/health
+    curl --fail --silent --show-error \
+      http://127.0.0.1:8098/v1/images/generations \
+      -H 'Content-Type: application/json' \
+      --data-binary @- > qwen-image-smoke-response.json <<'JSON'
+    {"model":"Qwen/Qwen-Image-2.1-Turbo","prompt":"A photorealistic red fox standing in a snowy forest at dawn, detailed fur, soft sunlight, a wide landscape composition.","seed":42,"n":1,"size":"1280x704","response_format":"b64_json","true_cfg_scale":1.0,"sigmas":[1.0,0.978453,0.95418,0.926626,0.89508,0.845148,0.704534,0.414568],"output_format":"png","output_compression":100}
+    JSON
+  benchmark: null
+deployment:
+  status: unverified
+  last_verified_at: null
+  evidence_url: null
+acceptance:
+  verdict: INCONCLUSIVE
+  issue_url: https://github.com/InferMatrixLab/InferRSI/issues/3
+  evidence_url: https://github.com/vllm-project/vllm-omni/pull/8739#issuecomment-6119846759
+maintainers:
+  - david6666666
+updated_at: "2026-10-19"
+limitations:
+  - This is a historical pinned upstream-patch reference, not an InferMatrixLab-owned implementation. PR8739 was subsequently merged upstream; this recorded deployment revision is deliberately not the rolling upstream main.
+  - Source setup selects the already patched PR checkout and uses explicit PYTHONPATH with the prepared vllm entrypoint; no separate patch application or new package installation is needed. Creation of the prepared runtime and model/cache download are prerequisites, not supplied as a reproducible environment lock by the source comment.
+  - The catalog collection did not run installation, startup, the request, model quality or hardware benchmarks. Linux distribution/version and the precise CUDA compiler package are not recorded; maintainers must supply and qualify them before a new deployment can be validated.
+  - The linked acceptance issue describes the original historical campaign; the linked upstream comment describes a separately rebased source pair. Neither is a fresh acceptance result for this catalog entry, and no performance number is imported here.
+  - The recorded configuration is BF16 eager, native eight sigmas, CFG1, TP1/Ulysses4/Ring1/VAE1, 1280x704 and concurrency 1. Other models, shapes, hardware, parallel layouts or runtime versions are not inferred to be supported.
+  - Explicit symmetric-memory communication changes configuration relative to the historical default-main arm; that recipe comparison must not be described as a matched-configuration code-only gain.
+  - Later human-review fixes have separate correctness/consumer evidence and are not included in this pinned d57480f deployment reference. The historical report does not establish production tail latency or H200/Hopper correctness.
+  - The request saves a complete JSON/base64 PNG response as a functional smoke; it is not a benchmark or quality comparison. Benchmark client additions require their own review, so no archived benchmark command is offered here.

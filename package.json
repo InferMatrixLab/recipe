@@ -1,0 +1,33 @@
+{
+  "name": "@infermatrixlab/recipe",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "dev": "node scripts/build-catalog.mjs && next dev",
+    "test": "node --test tests/*.test.mjs",
+    "validate": "node scripts/build-catalog.mjs",
+    "sync:sources": "node scripts/sync-sources.mjs",
+    "build": "node scripts/build-catalog.mjs && next build --webpack && node scripts/check-export.mjs",
+    "preview": "node scripts/preview.mjs"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/ibm-plex-sans": "^5.3.0",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "tailwindcss": "4.3.3"
+  }
+}
