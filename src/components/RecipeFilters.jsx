@@ -11,11 +11,22 @@ import ConfigurationRow from "./ConfigurationRow";
 import BrandLogo from "./BrandLogo";
 import { useCatalogSearch } from "./SiteShell";
 import { filterRecipes } from "@/lib/filter";
-import { HARDWARE, precisionLabel, taskLabel } from "@/lib/brands";
+import {
+  HARDWARE,
+  hardwareModelLabel,
+  precisionLabel,
+  taskLabel,
+} from "@/lib/brands";
 const unique = (values) => [...new Set(values)].sort();
 export default function RecipeFilters({ recipes }) {
   const { query, setQuery } = useCatalogSearch();
   const [filters, setFilters] = useState({});
+  const hardwareVendors = [
+    ...new Set([
+      ...Object.keys(HARDWARE),
+      ...unique(recipes.map((r) => r.hardware.vendor)),
+    ]),
+  ].filter((vendor) => recipes.some((r) => r.hardware.vendor === vendor));
   const update = (key, value) =>
     setFilters((old) => ({ ...old, [key]: old[key] === value ? "" : value }));
   const results = filterRecipes(recipes, { ...filters, q: query });
@@ -57,7 +68,7 @@ export default function RecipeFilters({ recipes }) {
           </div>
         </ConfigurationRow>
         <ConfigurationRow label="HARDWARE">
-          {unique(recipes.map((r) => r.hardware.vendor)).map((vendor) => (
+          {hardwareVendors.map((vendor) => (
             <div className="hardware-group" key={vendor}>
               <button
                 className={`vendor-label ${filters.vendor === vendor ? "selected" : ""}`}
@@ -78,7 +89,7 @@ export default function RecipeFilters({ recipes }) {
                 {unique(
                   recipes
                     .filter((r) => r.hardware.vendor === vendor)
-                    .map((r) => r.hardware.model),
+                    .map((r) => hardwareModelLabel(r.hardware)),
                 ).map((value) => pill("hardware", value))}
               </div>
             </div>

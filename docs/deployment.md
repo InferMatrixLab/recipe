@@ -47,6 +47,8 @@ an explicit configuration step; no domain or Pages site is presumed to exist.
 No production domain or live hosted URL was supplied. This delivery provides a
 local preview and static export. At the initial permission audit on 2026-10-19,
 the active GitHub account had READ on `InferMatrixLab/recipe` and four source
-engines, ADMIN on InferRSI and WRITE on the Drama engine. Publishing the central
-site and pushing the remaining source commits requires repository write access.
+engines, ADMIN on InferRSI and WRITE on the Drama engine. The latest permission
+check reports ADMIN on recipe, and the user has authorized direct integration
+into its `main`. The five engine source commits still await publication;
+merging recipe does not configure production Pages hosting.
 See [verification](verification.md) for the final delivery status.

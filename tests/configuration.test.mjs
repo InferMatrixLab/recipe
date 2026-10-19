@@ -1,7 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { fixture } from "./fixtures.mjs";
-import { providerGroups, modelBrand } from "../src/lib/brands.js";
+import {
+  providerGroups,
+  modelBrand,
+  hardwareModelLabel,
+} from "../src/lib/brands.js";
 import {
   selectConfiguration,
   configurationValue,
@@ -81,5 +85,35 @@ test("precision intersects hardware filters, and displayed provider names are se
   assert.equal(
     filterRecipes([x], { q: "Fish Audio", precision: "fp16" }).length,
     0,
+  );
+});
+
+test("short NVIDIA model filters include every recorded SKU without rewriting hardware", () => {
+  const recipes = ["B300", "B300 SXM6 AC", "H20-3e", "H200 SXM", "L40S"].map(
+    (model) => {
+      const recipe = fixture();
+      recipe.hardware = { vendor: "NVIDIA", model, device_count: 1 };
+      return recipe;
+    },
+  );
+  assert.deepEqual(
+    recipes.map((r) => hardwareModelLabel(r.hardware)),
+    ["B300", "B300", "H20", "H200", "L40S"],
+  );
+  assert.deepEqual(
+    filterRecipes(recipes, { vendor: "NVIDIA", hardware: "B300" }).map(
+      (r) => r.hardware.model,
+    ),
+    ["B300", "B300 SXM6 AC"],
+  );
+  assert.equal(filterRecipes(recipes, { hardware: "H20" })[0], recipes[2]);
+  assert.equal(filterRecipes(recipes, { hardware: "H200" })[0], recipes[3]);
+  assert.equal(
+    hardwareModelLabel({ vendor: "Huawei", model: "Ascend 910B1" }),
+    "Ascend 910B1",
+  );
+  assert.equal(
+    hardwareModelLabel({ vendor: "Apple", model: "M4 (16 GB unified memory)" }),
+    "M4 (16 GB unified memory)",
   );
 });

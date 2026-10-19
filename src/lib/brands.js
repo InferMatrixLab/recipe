@@ -21,6 +21,11 @@ export const HARDWARE = {
   Huawei: { name: "Huawei Ascend", logo: "/assets/brands/huawei.svg" },
   Apple: { name: "Apple Silicon", logo: "/assets/brands/apple.ico" },
 };
+export function hardwareModelLabel(hardware) {
+  return hardware.vendor === "NVIDIA"
+    ? hardware.model.split(/[\s-]/)[0]
+    : hardware.model;
+}
 export function modelBrand(model) {
   // A quantized checkpoint's publisher is distinct from its model manufacturer.
   if (model.provider === "mlx-community" && model.id.includes("/Qwen"))

@@ -1,4 +1,4 @@
-import { modelBrand } from "./brands.js";
+import { hardwareModelLabel, modelBrand } from "./brands.js";
 export function filterRecipes(recipes, filters = {}) {
   const q = (filters.q || "").trim().toLowerCase();
   return recipes.filter(
@@ -9,7 +9,7 @@ export function filterRecipes(recipes, filters = {}) {
           .includes(q)) &&
       (!filters.task || r.model.task === filters.task) &&
       (!filters.vendor || r.hardware.vendor === filters.vendor) &&
-      (!filters.hardware || r.hardware.model === filters.hardware) &&
+      (!filters.hardware || hardwareModelLabel(r.hardware) === filters.hardware) &&
       (!filters.backend || r.runtime.backend === filters.backend) &&
       (!filters.engine || r.engine.id === filters.engine) &&
       (!filters.precision || r.runtime.precision === filters.precision) &&

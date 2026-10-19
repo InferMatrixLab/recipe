@@ -27,8 +27,19 @@ repositories remain unchanged by this visual update.
 - [Design QA](../design-qa.md) records side-by-side source/render comparisons,
   initial findings, corrections and final visual result.
 
-All changes and the new commit remain local under the user's standing instruction.
 No source recipe or hardware acceptance status has been promoted.
+
+## All recipes hardware follow-up
+
+The hardware groups now follow NVIDIA, Huawei Ascend, Apple Silicon order.
+NVIDIA filter buttons use the model family (B300, H20, L40S in the current
+catalog), with duplicate B300 SKUs grouped under one button. Filtering retains
+both recorded B300 recipes; cards, detail pages and commands retain their exact
+hardware metadata. All 43 Node tests pass, including family filtering and
+unchanged Ascend/Apple labels.
+The root export passes 692 internal reference checks. Browser checks confirm
+group order, two B300 results, one H20 result and reset to all six recipes;
+no console warnings/errors were observed.
 
 Scope: InferRSI engine-delivery template, five organization-engine source recipes,
 one supplemental upstream Qwen-Image recipe, catalog/sync and static website.
@@ -75,28 +86,31 @@ routes/assets and found a Pages `.nojekyll` omission, now fixed. Browser testing
 additionally found and fixed mobile command overflow. Reviews recommend the
 specific examined revisions; they are not hardware acceptance or merge authority.
 
-## Local delivery and pending publication
+## Publication scope and pending engine sources
 
-The user's latest instruction is to finish local commits and run the service,
-then push after permissions are available. No further push is performed.
+The user's latest instruction authorizes integrating the central website into
+`InferMatrixLab/recipe` directly. The refreshed permission check reports ADMIN
+on that repository, and its remote `main` is still the initial commit before
+integration. This supersedes the earlier local-only instruction for recipe.
+The five engine source repositories remain local pending publication.
 The InferRSI template push had already completed before that instruction arrived:
 `f55b4bc054f7fe3a500451b91071ac542f299c20` is on remote `main`.
 The [scoped task Issue](https://github.com/InferMatrixLab/InferRSI/issues/29)
 remains open; no campaign Issue was closed.
 
-The five engine sources and central website are local signed commits. A real
+The five engine sources are local signed commits. A real
 `pnpm sync:sources` attempt returned GitHub 404 for the unpublished source YAML
 and exited 1; the existing lockfile's SHA-256 remained unchanged. The source
 lock/cache was built from each exact local Git commit using the same complete
 snapshot validation/atomic-write path. No successful remote source sync is claimed
 for YAML files that have not been pushed yet. Until their remote publication,
-new source/edit links and central GitHub documentation links can return 404;
+new engine source/edit links can return 404;
 the local website, cached recipes, original evidence and deployment revision
 links remain reviewable. Production domain/Pages hosting has not been configured.
 
-After write permission is available: publish the five source changes to their
-declared refs first, run `pnpm sync:sources`, review the resolved source commits,
-then validate/test/build and publish the central repository/static export. Avoid
+For the engine publication follow-up: publish the five source changes to their
+declared refs, run `pnpm sync:sources`, review the resolved source commits,
+then validate/test/build and refresh the central snapshot/static export. Avoid
 squashing away provenance without refreshing the lock. The website's local
 recipe source permalink is updated by rebuilding after its containing commit.
 
