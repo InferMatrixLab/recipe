@@ -1,5 +1,35 @@
 # Delivery verification — 2026-10-19
 
+## Website visual follow-up
+
+The user's supplied vLLM Recipes screenshots replace the initial landing-page
+visual direction. The website now uses a compact white header, manufacturer/model
+navigation, grouped configuration buttons, real provider/hardware logos and
+tabbed command panels. Quantized Qwen checkpoints appear under the Qwen model
+manufacturer while retaining their real `mlx-community` publisher/checkpoint ID.
+
+This follow-up was self-reviewed; the independent reviews below describe the
+earlier delivery slices. Source YAML, schema, evidence statuses and all engine
+repositories remain unchanged by this visual update.
+
+- 42 Node tests pass, including manufacturer/publisher grouping, complete-record
+  configuration selection and precision/filter intersections.
+- Root and `/recipe` prefix builds each pass 692 internal page/resource/anchor
+  references. Prefix browser navigation, selected model, header search and local
+  WebP/SVG/ICO assets work without console errors.
+- Actual browser checks cover model search, filter intersections, reset/no-results,
+  provider collapse/expand, model navigation, install expansion, command tabs,
+  disabled benchmark, environment display and exact clipboard content.
+- Arrow-key command-tab navigation works. Desktop, 768 px tablet and 390 px mobile
+  layouts have no page-level horizontal overflow; long commands scroll locally.
+- Provider/hardware images load with no missing images; console has no warnings
+  or errors during the tested flows.
+- [Design QA](../design-qa.md) records side-by-side source/render comparisons,
+  initial findings, corrections and final visual result.
+
+All changes and the new commit remain local under the user's standing instruction.
+No source recipe or hardware acceptance status has been promoted.
+
 Scope: InferRSI engine-delivery template, five organization-engine source recipes,
 one supplemental upstream Qwen-Image recipe, catalog/sync and static website.
 Runtime kernels, scheduler/evaluator behavior, old evidence and InferRSI's four

@@ -20,3 +20,14 @@ SIL Open Font License 1.1; copyright and full terms are in licenses/.
 All engine implementations, dependencies, models and imported recipe text retain
 their respective source licenses and authorship. See each source repository,
 the inventory, and original evidence. Catalog collection does not change ownership.
+
+Provider and hardware identifiers: original organization avatars from Hugging Face
+(Qwen, Fish Audio, Liquid AI, ByteDance, NVIDIA, mlx-community), Huawei's official
+favicon and Apple's official favicon, downloaded unchanged for local display.
+Exact original URLs, retrieval date and SHA-256 values are recorded in
+public/assets/brands/provenance.json. Brand marks retain their owners' rights;
+no new artwork or trademark license is asserted by this repository's MIT license.
+
+UI icons: Phosphor Icons, MIT License, copyright (c) 2020 Phosphor Icons.
+Full license is retained in licenses/Phosphor-Icons-MIT.txt. These library icons
+are separate from the manufacturer logos and were not drawn as approximations.

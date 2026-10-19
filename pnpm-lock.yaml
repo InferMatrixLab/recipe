@@ -13,6 +13,9 @@ importers:
       "@fontsource/ibm-plex-sans":
         specifier: ^5.3.0
         version: 5.3.0
+      "@phosphor-icons/react":
+        specifier: 2.1.10
+        version: 2.1.10(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       ajv:
         specifier: ^8.20.0
         version: 8.20.0
@@ -420,6 +423,16 @@ packages:
     engines: { node: ">= 10" }
     cpu: [x64]
     os: [win32]
+
+  "@phosphor-icons/react@2.1.10":
+    resolution:
+      {
+        integrity: sha512-vt8Tvq8GLjheAZZYa+YG/pW7HDbov8El/MANW8pOAz4eGxrwhnbfrQZq0Cp4q8zBEu8NIhHdnr+r8thnfRSNYA==,
+      }
+    engines: { node: ">=10" }
+    peerDependencies:
+      react: ">= 16.8"
+      react-dom: ">= 16.8"
 
   "@swc/helpers@0.5.23":
     resolution:
@@ -1068,6 +1081,11 @@ snapshots:
 
   "@next/swc-win32-x64-msvc@16.4.2":
     optional: true
+
+  "@phosphor-icons/react@2.1.10(react-dom@19.3.1(react@19.3.1))(react@19.3.1)":
+    dependencies:
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
   "@swc/helpers@0.5.23":
     dependencies:

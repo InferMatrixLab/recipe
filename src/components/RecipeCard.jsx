@@ -1,52 +1,60 @@
 import Link from "next/link";
-import { humanize } from "@/lib/paths";
+import { ArrowUpRight, Circle } from "@phosphor-icons/react/dist/ssr";
+import BrandLogo from "./BrandLogo";
+import {
+  modelBrand,
+  modelName,
+  HARDWARE,
+  precisionLabel,
+  taskLabel,
+} from "@/lib/brands";
 export function Status({ value }) {
   return (
     <span className={`status status-${value.toLowerCase()}`}>
-      <span aria-hidden="true" />
+      <Circle size={6} weight="fill" aria-hidden="true" />
       {value}
     </span>
   );
 }
 export default function RecipeCard({ recipe: r }) {
+  const brand = modelBrand(r.model);
   return (
     <article className="recipe-card">
       <div className="card-top">
-        <span className="eyebrow">{r.model.provider}</span>
-        <Status value={r.deployment.status} />
+        <div className="card-provider">
+          <BrandLogo brand={brand} decorative />
+          <span>{brand.name}</span>
+        </div>
+        <ArrowUpRight size={15} />
       </div>
       <h3>
-        <Link href={`/recipes/${r.id}/`}>{r.title}</Link>
+        <Link href={`/models/${r.modelSlug}/`}>{modelName(r.model)}</Link>
       </h3>
       <p className="model-id">{r.model.id}</p>
       <div className="chips">
-        <span>{humanize(r.model.task)}</span>
-        <span>{r.runtime.precision}</span>
-        <span>{r.runtime.backend}</span>
+        <span>{taskLabel(r.model.task)}</span>
+        <span>{precisionLabel(r.runtime.precision)}</span>
+        <span>{r.runtime.backend.toUpperCase()}</span>
       </div>
       <div className="hardware-line">
-        <span className="chip-icon" aria-hidden="true">
-          ▦
-        </span>
+        <BrandLogo brand={HARDWARE[r.hardware.vendor]} decorative />
         <div>
           <strong>
             {r.hardware.device_count} × {r.hardware.model}
           </strong>
-          <small>
-            {r.hardware.vendor} · {r.engine.name}
-          </small>
+          <small>{r.engine.name}</small>
         </div>
       </div>
       <div className="card-evidence">
+        <Status value={r.deployment.status} />
         <span>
           Acceptance <b>{r.acceptance.verdict}</b>
         </span>
-        <time dateTime={r.updated_at}>{r.updated_at}</time>
       </div>
       <div className="card-bottom">
-        <Link href={`/models/${r.modelSlug}/`}>Model overview</Link>
+        <time dateTime={r.updated_at}>Updated {r.updated_at}</time>
         <Link href={`/recipes/${r.id}/`} aria-label={`View recipe: ${r.title}`}>
-          View recipe <span aria-hidden="true">↗</span>
+          View recipe <ArrowUpRight size={12} />
         </Link>
       </div>
     </article>

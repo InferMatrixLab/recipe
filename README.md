@@ -7,6 +7,13 @@ An [InferMatrixLab](https://github.com/InferMatrixLab) project. The catalog show
 deployment status and performance acceptance separately, with commands and
 source provenance. Unlisted combinations have no support claim.
 
+The interface follows the supplied vLLM Recipes reference: a searchable header,
+manufacturer/model sidebar, grouped hardware/precision/engine filters, and a
+model workspace with install, serve, request and environment panels. Provider
+and hardware brand marks are bundled locally with their source provenance.
+Configuration buttons select complete recorded recipes; unavailable combinations
+stay disabled and never produce synthesized deployment commands.
+
 ## Run locally
 
 Requires Node.js 22+ and pnpm 11.25.0. The lockfile pins the resolved dependencies.

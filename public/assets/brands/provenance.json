@@ -1,0 +1,69 @@
+{
+  "retrieved_at": "2026-10-19",
+  "assets": [
+    {
+      "file": "public/assets/brands/qwen.webp",
+      "brand": "Qwen",
+      "source_page": "https://huggingface.co/Qwen",
+      "source_url": "https://cdn-avatars.huggingface.co/v1/production/uploads/6215ca5692c0ecfba9186921/hrRM50-6XcdWgg2AKpENG.jpeg",
+      "sha256": "0c74f4f564ec24d5fd552b63efd43a9a85214ab4f6c7951e53c0d4328e5967d0",
+      "terms": "Brand mark retained for identification; no new trademark or artwork license asserted."
+    },
+    {
+      "file": "public/assets/brands/fish-audio.webp",
+      "brand": "fishaudio",
+      "source_page": "https://huggingface.co/fishaudio",
+      "source_url": "https://cdn-avatars.huggingface.co/v1/production/uploads/63124e13b843665ddc69837a/OwWIs3RNzXAdv4aSrV_xQ.png",
+      "sha256": "32b689c2b313526edf1e8b334c10ce781f9b84ed831c51fe6ba6d9948ce83588",
+      "terms": "Brand mark retained for identification; no new trademark or artwork license asserted."
+    },
+    {
+      "file": "public/assets/brands/liquid-ai.webp",
+      "brand": "LiquidAI",
+      "source_page": "https://huggingface.co/LiquidAI",
+      "source_url": "https://cdn-avatars.huggingface.co/v1/production/uploads/61b8e2ba285851687028d395/EsTgVtnM2IqVRKgPdfqcB.png",
+      "sha256": "47560632f45a20a45c6fcc6d7a8bafb6cb0ee17c2df576baa49f30430aca26d9",
+      "terms": "Brand mark retained for identification; no new trademark or artwork license asserted."
+    },
+    {
+      "file": "public/assets/brands/bytedance.webp",
+      "brand": "ByteDance",
+      "source_page": "https://huggingface.co/ByteDance",
+      "source_url": "https://cdn-avatars.huggingface.co/v1/production/uploads/6535c9e88bde2fae19b6fb25/0clr54wj5Ly-RkYU9OXPp.png",
+      "sha256": "673abccc9eaa0ece67840747ac932b1c02c27d95fd05c57301c10c0d88f13947",
+      "terms": "Brand mark retained for identification; no new trademark or artwork license asserted."
+    },
+    {
+      "file": "public/assets/brands/nvidia.webp",
+      "brand": "nvidia",
+      "source_page": "https://huggingface.co/nvidia",
+      "source_url": "https://cdn-avatars.huggingface.co/v1/production/uploads/65df9200dc3292a8983e5017/Vs5FPVCH-VZBipV3qKTuy.png",
+      "sha256": "75f85aa1b5c95694f9199ae163b0a42ccd45c8ef2870d7dc494c1733b869444d",
+      "terms": "Brand mark retained for identification; no new trademark or artwork license asserted."
+    },
+    {
+      "file": "public/assets/brands/mlx-community.webp",
+      "brand": "mlx-community",
+      "source_page": "https://huggingface.co/mlx-community",
+      "source_url": "https://cdn-avatars.huggingface.co/v1/production/uploads/623c830997ddced06d78699b/3qTjC7d3YFCJTwpxd2noq.png",
+      "sha256": "6b2571cb8ea1593ffee59ed7c35411ce016fcc63246d3488368dabce2a0cfc96",
+      "terms": "Brand mark retained for identification; no new trademark or artwork license asserted."
+    },
+    {
+      "file": "public/assets/brands/huawei.svg",
+      "brand": "huawei",
+      "source_page": "https://www.huawei.com/en/",
+      "source_url": "https://www.huawei.com/-/media/htemplate-home/1.0.1.20251205144752/components/assets/img/favicon-logo.svg",
+      "sha256": "18c6f80d423c1b1e01e4a6e02f66e1375567fd909de1af55c8013430a504126d",
+      "terms": "Official site brand identifier; no new trademark or artwork license asserted."
+    },
+    {
+      "file": "public/assets/brands/apple.ico",
+      "brand": "apple",
+      "source_page": "https://www.apple.com/",
+      "source_url": "https://www.apple.com/favicon.ico",
+      "sha256": "5493c61cf725cf3a1d63cd9d07de75b0d6faa5564e772f7d0a6074f341442938",
+      "terms": "Official site brand identifier; no new trademark or artwork license asserted."
+    }
+  ]
+}

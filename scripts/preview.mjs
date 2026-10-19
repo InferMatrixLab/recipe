@@ -11,6 +11,8 @@ const types = {
   ".js": "text/javascript",
   ".json": "application/json",
   ".png": "image/png",
+  ".webp": "image/webp",
+  ".ico": "image/x-icon",
   ".svg": "image/svg+xml",
   ".woff2": "font/woff2",
   ".woff": "font/woff",
