@@ -1,0 +1,76 @@
+# Catalog-owned recipe: the pinned engine repository has no recipes/ YAML source.
+# Commands follow its README and scripts/env.sh; no hardware execution during collection.
+schema_version: 1
+id: minicpm-o-4-5-h200
+title: MiniCPM-o 4.5 / Single-GPU Engine / H200
+kind: standalone_engine
+model:
+  id: openbmb/MiniCPM-o-4_5
+  provider: OpenBMB
+  task: text_to_speech
+engine:
+  id: minicpm-o-4-5-single-gpu-engine
+  name: MiniCPM-o 4.5 Engine
+  repository: https://github.com/InferMatrixLab/minicpm-o-4.5-single-gpu-engine
+  ref: a4f4778f312791c2d190b48e521141887ed160c8
+runtime:
+  backend: cuda
+  precision: bf16 / fp16 / fp32
+hardware:
+  vendor: NVIDIA
+  model: H200
+  device_count: 1
+environment:
+  os: Linux (distribution/version not recorded in the engine quickstart)
+  requirements:
+    - One NVIDIA H200 is the deployment target. The source measured about 95 GB use on a 143 GB L20X; H200 startup, memory use and performance remain unverified.
+    - Python 3.12, uv, Git, Bash, curl and GNU base64. The engine quickstart requires a CUDA 13-capable driver and the serve script requires nvidia-smi and nvidia-cuda-mps-control for private MPS.
+    - engine/env/engine.lock pins torch 2.13.0+cu130, transformers 5.14.1, flashinfer-python 0.7.0.post1, Triton 3.7.1 and minicpmo-utils 1.0.6; install without dependency resolution as documented.
+    - Download openbmb/MiniCPM-o-4_5 at revision 503e754207c94da6bb26850b4469f367c9ea3582, including assets/HT_ref_audio.wav. Respect the model's separate license and access requirements.
+    - The source L20X measurements (not H200 results) list NVIDIA driver 570.133.20; the quickstart requires CUDA 13. Driver/toolkit compatibility and any compatibility-layer setup must be checked on the target host before deployment.
+    - Allow model loading, CUDA graph capture, Token2Wav kernel compilation and feature-process warmup to finish before sending requests. The server binds to loopback.
+commands:
+  install: |
+    set -euo pipefail
+    git clone --no-checkout https://github.com/InferMatrixLab/minicpm-o-4.5-single-gpu-engine.git
+    cd minicpm-o-4.5-single-gpu-engine
+    git checkout --detach a4f4778f312791c2d190b48e521141887ed160c8
+    uv venv --python 3.12 .venv-engine
+    uv pip install --python .venv-engine/bin/python --no-deps \
+      --index-strategy unsafe-best-match --extra-index-url https://download.pytorch.org/whl/cu130 \
+      -r engine/env/engine.lock
+    .venv-engine/bin/hf download openbmb/MiniCPM-o-4_5 \
+      --revision 503e754207c94da6bb26850b4469f367c9ea3582
+  serve: |
+    # Run from the pinned engine checkout. This is the README default, not r11.
+    set -euo pipefail
+    CUDA_VISIBLE_DEVICES=0 ENGINE_MPS=1 scripts/serve_engine.sh track_s_fast 18080
+  request: |
+    # Run from the engine checkout in another terminal using the same HF cache.
+    set -euo pipefail
+    curl --fail http://127.0.0.1:18080/health
+    REF="${HF_HUB_CACHE:-${HF_HOME:-$HOME/.cache/huggingface}/hub}/models--openbmb--MiniCPM-o-4_5/snapshots/503e754207c94da6bb26850b4469f367c9ea3582/assets/HT_ref_audio.wav"
+    test -f "$REF"
+    printf '{"model":"openbmb/MiniCPM-o-4_5","stream":true,"modalities":["text","audio"],"messages":[{"role":"user","content":"Please read the following text out loud in English: Hello from MiniCPM-o."}],"chat_template_kwargs":{"use_tts_template":true,"enable_thinking":false},"max_tokens":256,"temperature":0,"seed":1,"ref_audio":"data:audio/wav;base64,%s"}' "$(base64 -w0 "$REF")" > body.json
+    curl --fail-with-body -N http://127.0.0.1:18080/v1/chat/completions \
+      -H 'Content-Type: application/json' --data-binary @body.json
+  benchmark: null
+deployment:
+  status: unverified
+  last_verified_at: null
+  evidence_url: null
+acceptance:
+  verdict: INCONCLUSIVE
+  issue_url: null
+  evidence_url: https://github.com/InferMatrixLab/minicpm-o-4.5-single-gpu-engine/blob/a4f4778f312791c2d190b48e521141887ed160c8/docs/current-results.md
+maintainers:
+  - fake0fan
+updated_at: "2026-10-20"
+limitations:
+  - Collected from the pinned README, docs/architecture.md, scripts/env.sh and engine/env/engine.lock. The source repository has no engine-owned recipe YAML at this revision, so this catalog owns the entry; this does not assign new runtime maintenance responsibilities.
+  - No installation, startup, speech-quality or GPU benchmark was run during catalog collection. H200 is a target configuration, not a validated hardware-support claim. The maintainer contact is the verified GitHub author of the source commit.
+  - This recipe serves track_s_fast (BF16 Thinker/Talker, FP16 flow, strict FP32 HiFT). The published performance uses track_s_fast_r11, which adds TF32 HiFT, batched prompt setup and Talker prefill graphs; those numbers do not measure the default profile here.
+  - The r11 L20X development comparison misses the all-metric/all-concurrency 2x target. Its HiFT check fails on 1 of 190 chunks (1.06e-2 versus a 1e-2 bound); full speech-quality gates are not run. The planned H200 K=10 acceptance is also not run, so the catalog verdict remains INCONCLUSIVE.
+  - Default-profile development quality covers only one seed; comparative three-seed speech-quality and multimodal engine accuracy gates are pending. Source support for image/audio/video inputs is not multimodal accuracy acceptance.
+  - The endpoint uses OpenAI-compatible chat completions with engine-specific ref_audio and modality-tagged SSE events. Audio chunks contain base64 WAV (24 kHz mono PCM16), with audio_offset_samples and num_samples; this request does not assemble or play the audio.
+  - Benchmark reproduction requires a separate harness environment, pinned Seed-TTS dataset, baseline checkouts and evaluator assets described in docs/reproduce-benchmark.md. No one-command benchmark is offered by this recipe.

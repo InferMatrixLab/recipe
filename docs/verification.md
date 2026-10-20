@@ -1,5 +1,26 @@
 # Delivery verification — 2026-10-19
 
+## MiniCPM-o 4.5 addition — 2026-10-20
+
+Added a catalog-owned, source-pinned H200 target recipe. Upstream has no recipe
+YAML at the pinned revision. Its L20X measurements remain identified as source
+evidence; H200 deployment is unverified and acceptance stays INCONCLUSIVE.
+
+- All 43 existing Node tests passed. Offline validation found seven recipes,
+  seven models and seven engines; the production static export passed 795
+  internal page/resource/anchor checks.
+- All three command blocks passed Bash syntax checks. The embedded request
+  parsed as streaming text/audio JSON. No deployment command was executed.
+- Browser checks confirmed the OpenBMB model entry, H200 filtering to the one
+  new recipe, direct detail navigation, request/serve tabs and clipboard text
+  matching the request panel exactly. At 390 px there was no page overflow;
+  the tested browser session had no console warnings or errors.
+- Self-review checked the pinned environment, default versus r11 distinction,
+  evidence links, pending quality/numerical gates and catalog ownership.
+  No hardware experiment was rerun. Remote follow-up requires H200 driver/CUDA
+  compatibility, startup/memory, streaming audio, exact-profile numerical and
+  speech-quality validation, then the documented K=10 acceptance protocol.
+
 ## Website visual follow-up
 
 The user's supplied vLLM Recipes screenshots replace the initial landing-page

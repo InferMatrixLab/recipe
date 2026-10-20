@@ -162,3 +162,23 @@ Verification limits and follow-ups:
 The engines document additional models and experiments. Qualify other MLX SKUs/checkpoints, RLT model variants, native System1 implementations, Qwen 910B3 and different Drama hardware independently; no support is inferred from this catalog. InferRSI’s separate Drama NPU readiness supplement is documentation, not an engine qualification.
 
 InferMatrixCopilot, the organization website, playbook and marketing projects are outside this engine implementation. No personal/private repository transfer was performed; any future transfer requires source/target relationship and permission checks.
+
+## MiniCPM-o 4.5 supplement — 2026-10-20
+
+- Owner: [InferMatrixLab/minicpm-o-4.5-single-gpu-engine](https://github.com/InferMatrixLab/minicpm-o-4.5-single-gpu-engine), default branch `main`.
+- Deployment/documentation pin: `a4f4778f312791c2d190b48e521141887ed160c8`; verified source-commit author/contact: @fake0fan.
+- Catalog-owned source: [minicpm-o-4-5-h200.yaml](../recipes/minicpm-o-4-5-h200.yaml). No recipe YAML exists in the pinned upstream tree, so the documented local-source exception applies. No upstream repository is changed. H200 naming does not relabel the L20X performance evidence.
+- Model/task: `openbmb/MiniCPM-o-4_5@503e754207c94da6bb26850b4469f367c9ea3582`, `text_to_speech` with a reference voice prompt.
+- Target hardware: one NVIDIA H200, as requested by the user; execution remains unverified. Source measurements used an L20X (143 GB), about 95 GB used. Linux, Python 3.12, CUDA MPS. BF16 Thinker/Talker, FP16 flow, strict FP32 HiFT in the default profile. Other GPUs are unqualified here.
+- Sources: [README](https://github.com/InferMatrixLab/minicpm-o-4.5-single-gpu-engine/blob/a4f4778f312791c2d190b48e521141887ed160c8/README.md), [architecture](https://github.com/InferMatrixLab/minicpm-o-4.5-single-gpu-engine/blob/a4f4778f312791c2d190b48e521141887ed160c8/docs/architecture.md), [environment](https://github.com/InferMatrixLab/minicpm-o-4.5-single-gpu-engine/blob/a4f4778f312791c2d190b48e521141887ed160c8/engine/env/engine.lock), [results](https://github.com/InferMatrixLab/minicpm-o-4.5-single-gpu-engine/blob/a4f4778f312791c2d190b48e521141887ed160c8/docs/current-results.md), [benchmark reproduction](https://github.com/InferMatrixLab/minicpm-o-4.5-single-gpu-engine/blob/a4f4778f312791c2d190b48e521141887ed160c8/docs/reproduce-benchmark.md).
+
+Deployment remains **unverified / INCONCLUSIVE**: collection did not execute GPU workloads.
+The recipe serves `track_s_fast`; the development performance report uses `track_s_fast_r11`
+(TF32 HiFT, batched prompt setup and Talker prefill graphs). r11 fails one HiFT numerical
+chunk and has not run the final speech-quality gates; the full 2× performance target is
+unmet, and H200 K=10 acceptance is not run. The default profile's one-seed development
+quality does not establish final acceptance. The source reports driver 570.133.20 while
+the quickstart requires CUDA 13; target-host driver/toolkit compatibility remains to verify.
+Benchmark is intentionally null; its separate harness, dataset and evaluator prerequisites
+are linked rather than reduced to an incomplete command. This supplement adds a sixth
+organization standalone engine and seventh catalog entry to the historical inventory above.

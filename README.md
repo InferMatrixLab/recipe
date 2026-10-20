@@ -40,6 +40,17 @@ Source sync reads only declared GitHub YAML files and metadata. It uses
 GitHub access. Credentials never belong in source declarations or the lockfile.
 Sync/build never run recipe commands, model downloads or hardware workloads.
 
+## Latest catalog addition
+
+[MiniCPM-o 4.5 / single H200](recipes/minicpm-o-4-5-h200.yaml) records the
+[pinned engine](https://github.com/InferMatrixLab/minicpm-o-4.5-single-gpu-engine/blob/a4f4778f312791c2d190b48e521141887ed160c8/README.md) default `track_s_fast` installation,
+MPS startup and streaming text/audio request for the H200 target.
+All source performance measurements are from L20X; H200 execution is pending.
+The catalog owns this recipe because the source revision has no engine-owned recipe
+YAML. Deployment remains unverified
+and acceptance INCONCLUSIVE; the measured r11 profile differs from this default,
+misses the full 2× target and has a numerical failure plus pending quality gates.
+
 ## Contribute and deploy
 
 - [Engine delivery template](https://github.com/InferMatrixLab/InferRSI/tree/main/docs/template): maintained only in InferRSI.
