@@ -182,3 +182,12 @@ the quickstart requires CUDA 13; target-host driver/toolkit compatibility remain
 Benchmark is intentionally null; its separate harness, dataset and evaluator prerequisites
 are linked rather than reduced to an incomplete command. This supplement adds a sixth
 organization standalone engine and seventh catalog entry to the historical inventory above.
+
+## h3-metal supplement — 2026-10-29
+
+- External owner: [zuiho-kai/h3-metal](https://github.com/zuiho-kai/h3-metal), not an InferMatrixLab repository transfer.
+- Engine/source pin: `4ba47a3eabdbebf801ac6664b31f8ec168bc57a8`; owner and source-commit author: @zuiho-kai.
+- [Catalog-owned recipe](../recipes/fasth3-h3-metal-m5-max.yaml): the pinned upstream tree has no engine-owned recipe YAML. Targets FastVideo's FastH3 4-step preview on one M5 Max (40-core GPU), 128 GB, macOS 27. Metal-native CLI, mixed int8 TensorOps / BF16 video decoder; no HTTP endpoint is claimed.
+- [README / reported performance](https://github.com/zuiho-kai/h3-metal/blob/4ba47a3eabdbebf801ac6664b31f8ec168bc57a8/README.md#performance), [usage](https://github.com/zuiho-kai/h3-metal/blob/4ba47a3eabdbebf801ac6664b31f8ec168bc57a8/docs/USAGE.md), [benchmark harness](https://github.com/zuiho-kai/h3-metal/blob/4ba47a3eabdbebf801ac6664b31f8ec168bc57a8/bench/run_fox2.sh), [InferRSI lessons](https://github.com/InferMatrixLab/InferRSI/blob/main/docs/h3-metal-apple-silicon-lessons.md).
+- Author reports 48.23 s cold / 18.20 s warm at 768×448, 49 frames, seed 0, real weights, one engine at a time. The 4.03× h3.c and 7.40× MLX warm ratios compare distilled 4-step FastH3 with 20-step configurations and different warm aggregation protocols; they do not establish equivalent quality or equal-model/precision speedup. Original H3 is separately reported as 54.29 s cold / 29.89 s warm.
+- Native/device/model/quality checks were not rerun. Deployment remains unverified and acceptance INCONCLUSIVE. Model snapshot and compiler/SDK pins require completion before a reproducible hardware campaign. Engine code is MIT with third-party BSD-3-Clause notices; weights have separate terms.

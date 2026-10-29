@@ -42,6 +42,18 @@ Sync/build never run recipe commands, model downloads or hardware workloads.
 
 ## Latest catalog addition
 
+[FastH3 / h3-metal / Apple M5 Max](recipes/fasth3-h3-metal-m5-max.yaml) adds
+a Metal-native text-to-video/audio showcase built with InferRSI-style measurements.
+The [pinned upstream report](https://github.com/zuiho-kai/h3-metal/blob/4ba47a3eabdbebf801ac6664b31f8ec168bc57a8/README.md#performance)
+records 48.23 s cold / 18.20 s warm on M5 Max (40-core GPU), 128 GB, macOS 27,
+768×448, 49 frames, seed 0. FastH3 uses a distilled four-step checkpoint; the
+reported 4.03× / 7.40× warm ratios compare against 20-step h3.c / MLX runs,
+not equal-checkpoint/equal-step configurations. These are author-reported results,
+not rerun here. The recipe remains **unverified / INCONCLUSIVE**, uses a native
+interactive CLI rather than HTTP serving, and links the exact setup and limits.
+
+### Previous addition
+
 [MiniCPM-o 4.5 / single H200](recipes/minicpm-o-4-5-h200.yaml) records the
 [pinned engine](https://github.com/InferMatrixLab/minicpm-o-4.5-single-gpu-engine/blob/a4f4778f312791c2d190b48e521141887ed160c8/README.md) default `track_s_fast` installation,
 MPS startup and streaming text/audio request for the H200 target.

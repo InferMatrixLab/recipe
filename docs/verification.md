@@ -1,5 +1,24 @@
 # Delivery verification — 2026-10-19
 
+## h3-metal addition — 2026-10-29
+
+Added one catalog-owned FastH3 / h3-metal / M5 Max recipe pinned to upstream
+`4ba47a3eabdbebf801ac6664b31f8ec168bc57a8`. The new entry preserves external
+ownership, interactive CLI semantics, author-reported timing, four-step distilled
+versus 20-step baseline differences, and **unverified / INCONCLUSIVE** status.
+
+- All 46 Node tests passed, including three new FastH3 content/filter/Bash-syntax
+  checks. Validation found eight recipes, eight models and eight engines.
+- Root and `/recipe` prefix exports each passed 902 internal page/resource/anchor checks, including
+  the new model and recipe detail routes. No recipe command was executed.
+- Independent read-only source review found no blocking issue and independently
+  passed the three FastH3 tests and `git diff --check`.
+- Managed browser preview verified the new provider/model, h3-metal filter,
+  detail navigation, request tab and disabled benchmark. Desktop screenshot
+  review retained the existing layout; mobile-specific visual QA was not run.
+- No native build, model/weight download, Apple inference, quality check or
+  performance rerun was performed. Historical speed ratios remain source claims.
+
 ## MiniCPM-o 4.5 addition — 2026-10-20
 
 Added a catalog-owned, source-pinned H200 target recipe. Upstream has no recipe

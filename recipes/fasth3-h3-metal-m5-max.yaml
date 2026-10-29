@@ -1,0 +1,69 @@
+# Catalog-owned: the pinned upstream tree has no engine-owned recipe YAML.
+schema_version: 1
+id: fasth3-h3-metal-m5-max
+title: FastH3 / h3-metal / Apple M5 Max
+kind: standalone_engine
+model:
+  id: FastVideo/FastVideo-FastH3-4-step-Preview-v1-VSA-DataFree
+  provider: FastVideo
+  task: text_to_video_audio
+engine:
+  id: h3-metal
+  name: h3-metal
+  repository: https://github.com/zuiho-kai/h3-metal
+  ref: 4ba47a3eabdbebf801ac6664b31f8ec168bc57a8
+runtime:
+  backend: metal
+  precision: mixed int8 TensorOps / bf16 video decoder
+hardware:
+  vendor: Apple
+  model: M5 Max (40-core GPU, 128 GB unified memory)
+  device_count: 1
+environment:
+  os: macOS 27 (author-reported benchmark host)
+  requirements:
+    - Apple silicon Mac with a compatible Metal toolchain. This entry targets the reported M5 Max with 128 GB unified memory; it does not qualify other Macs or memory capacities.
+    - Git, make and Apple clang with Foundation, Metal, MetalPerformanceShaders, MetalPerformanceShadersGraph and Accelerate frameworks. Exact compiler/SDK versions are not frozen in the upstream quickstart.
+    - FFmpeg and FFprobe on PATH for video/audio output.
+    - Prepare the MiniMax-H3 Hugging Face snapshot at ./MiniMax-H3. Add the FastVideo/FastVideo-FastH3-4-step-Preview-v1-VSA-DataFree transformer directory at ./MiniMax-H3/FastH3-4step/transformer before generation. Weights are not included; their publisher terms apply separately.
+    - Upstream does not pin the model snapshot revisions in its quickstart. Record both local snapshot revisions before attempting a reproducible comparison.
+commands:
+  install: |
+    set -euo pipefail
+    git clone --no-checkout https://github.com/zuiho-kai/h3-metal.git
+    cd h3-metal
+    git checkout --detach 4ba47a3eabdbebf801ac6664b31f8ec168bc57a8
+    make -j8
+    # Place the base snapshot and FastH3 transformer at the paths in Environment.
+    ./h3 --info -d ./MiniMax-H3
+  serve: |
+    # Run from the pinned checkout after preparing weights. This is an interactive
+    # CLI session, not an HTTP server. Omitting -p keeps the model resident.
+    H3_VAE_BF16=1 ./h3 -d ./MiniMax-H3 --fasth3 --use-int8-row-fc2 \
+      --width 768 --height 448 --frames 49 --seed 0
+  request: |
+    # For a standalone one-clip request, run this from the pinned checkout.
+    # It starts a fresh process; it does not measure resident-session warm latency.
+    H3_VAE_BF16=1 ./h3 -d ./MiniMax-H3 --fasth3 --use-int8-row-fc2 \
+      -p "a red fox leaps off a mossy log at dawn" \
+      --width 768 --height 448 --frames 49 --seed 0
+  benchmark: null
+deployment:
+  status: unverified
+  last_verified_at: null
+  evidence_url: null
+acceptance:
+  verdict: INCONCLUSIVE
+  issue_url: null
+  evidence_url: https://github.com/zuiho-kai/h3-metal/blob/4ba47a3eabdbebf801ac6664b31f8ec168bc57a8/README.md#performance
+maintainers:
+  - zuiho-kai
+updated_at: "2026-10-29"
+limitations:
+  - This catalog-owned entry follows the pinned README, docs/USAGE.md, Makefile and CLI flags. zuiho-kai is the upstream owner and verified source-commit author, not a newly assigned catalog maintainer. No upstream files are changed.
+  - No native build, model download, Apple-device inference, output-quality evaluation or performance experiment was run during this import. Catalog tests cannot promote deployment status or establish acceptance.
+  - h3-metal is an external showcase using InferRSI-style frozen gates and alternating A/B measurements, derived from antirez/h3.c. This does not establish an implemented unattended optimization loop; upstream lists that loop on its roadmap.
+  - Author-reported FastH3 timing is 48.23 s cold and 18.20 s warm on M5 Max 40-core GPU, 128 GB, macOS 27, 768x448, 49 frames, seed 0, one engine at a time. Cold includes loading/preparation; warm reuses loaded weights and prepared state. These results were not independently rerun.
+  - The reported 4.03x warm ratio versus h3.c and 7.40x versus the 4-bit MLX port compare a distilled 4-step checkpoint with 20-step configurations. They are not equal-checkpoint, equal-step or equal-precision algorithm speedups, nor a general quality-equivalence claim. Original H3 20-step is separately reported at 54.29 s cold and 29.89 s warm.
+  - Published warm protocols differ between the 20-step rows (mean of clips 2–4) and FastH3 (two A/B/B/A warm runs). The quickstart fox prompt above is not the longer benchmark prompt. See the pinned README and bench/run_fox2.sh for the reference harness; benchmark is intentionally null rather than claiming that one invocation recreates the complete comparison.
+  - Model weights and compiler/SDK revisions are not fully frozen in the quickstart. The code is MIT with BSD-3-Clause notices for adapted Metal kernels; model licenses and access are separate. Source licensing does not grant rights to bundled weights.

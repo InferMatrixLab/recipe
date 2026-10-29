@@ -61,6 +61,7 @@ export function taskLabel(task) {
     {
       text_to_speech: "Text to speech",
       text_to_image: "Text to image",
+      text_to_video_audio: "Text to video + audio",
       text_generation: "Text generation",
       constrained_scoring: "Choice scoring",
     }[task] || task.replaceAll("_", " ")
